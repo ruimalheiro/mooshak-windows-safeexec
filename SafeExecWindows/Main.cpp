@@ -21,10 +21,10 @@ DWORD         SchedulingClassValue         = NULL;
 // JOBOBJECT_EXTENDED_LIMIT_INFORMATION structure
 // More info: http://msdn.microsoft.com/en-us/library/windows/desktop/ms684156(v=vs.85).aspx
 
-SIZE_T                            ProcessMemoryLimitValue    = 100000000;
-SIZE_T                            JobMemoryLimitValue        = 100000000;
-SIZE_T                            PeakProcessMemoryUsedValue = NULL;
-SIZE_T                            PeakJobMemoryUsedValue     = NULL;
+SIZE_T       ProcessMemoryLimitValue    = 100000000;
+SIZE_T       JobMemoryLimitValue        = 100000000;
+SIZE_T       PeakProcessMemoryUsedValue = NULL;
+SIZE_T       PeakJobMemoryUsedValue     = NULL;
 
 
 
