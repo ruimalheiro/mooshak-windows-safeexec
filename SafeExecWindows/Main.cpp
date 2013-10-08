@@ -21,10 +21,10 @@ DWORD         SchedulingClassValue         = NULL;
 // JOBOBJECT_EXTENDED_LIMIT_INFORMATION structure
 // More info: http://msdn.microsoft.com/en-us/library/windows/desktop/ms684156(v=vs.85).aspx
 
-SIZE_T       ProcessMemoryLimitValue    = 100000000;
-SIZE_T       JobMemoryLimitValue        = 100000000;
-SIZE_T       PeakProcessMemoryUsedValue = NULL;
-SIZE_T       PeakJobMemoryUsedValue     = NULL;
+SIZE_T        ProcessMemoryLimitValue    = 100000000;
+SIZE_T        JobMemoryLimitValue        = 100000000;
+SIZE_T        PeakProcessMemoryUsedValue = NULL;
+SIZE_T        PeakJobMemoryUsedValue     = NULL;
 
 
 
@@ -45,16 +45,16 @@ int main(int argc, char ** argv){
 	job_object_basic_limit_information_struct.PerProcessUserTimeLimit = PerProcessUserTimeLimitValue;
 	job_object_basic_limit_information_struct.PerJobUserTimeLimit = PerJobUserTimeLimitValue;
 	job_object_basic_limit_information_struct.LimitFlags = JOB_OBJECT_LIMIT_PROCESS_MEMORY | 
-		                                                   JOB_OBJECT_LIMIT_JOB_MEMORY | 
-					                                       JOB_OBJECT_LIMIT_JOB_TIME | 
-					                                       JOB_OBJECT_LIMIT_PROCESS_TIME;
+		JOB_OBJECT_LIMIT_JOB_MEMORY | 
+		JOB_OBJECT_LIMIT_JOB_TIME | 
+		JOB_OBJECT_LIMIT_PROCESS_TIME;
 	job_object_basic_limit_information_struct.MinimumWorkingSetSize = MinimumWorkingSetSizeValue;
 	job_object_basic_limit_information_struct.MaximumWorkingSetSize = MaximumWorkingSetSizeValue;
 	job_object_basic_limit_information_struct.ActiveProcessLimit = ActiveProcessLimitValue;
 	job_object_basic_limit_information_struct.Affinity = AffinityValue;
 	job_object_basic_limit_information_struct.PriorityClass = PriorityClassValue;
 	job_object_basic_limit_information_struct.SchedulingClass = SchedulingClassValue;
-	
+
 	JOBOBJECT_EXTENDED_LIMIT_INFORMATION job_object_extended_limit_information_struct = { 0 };
 	job_object_extended_limit_information_struct.BasicLimitInformation = job_object_basic_limit_information_struct;
 	job_object_extended_limit_information_struct.ProcessMemoryLimit = ProcessMemoryLimitValue;
@@ -71,32 +71,32 @@ int main(int argc, char ** argv){
 	printf("The job object was successfully configured with the information from the structures.\n");
 
 	STARTUPINFO si;
-    PROCESS_INFORMATION pi;
+	PROCESS_INFORMATION pi;
 
-    ZeroMemory( &si, sizeof(si) );
-    si.cb = sizeof(si);
-    ZeroMemory( &pi, sizeof(pi) );
+	ZeroMemory( &si, sizeof(si) );
+	si.cb = sizeof(si);
+	ZeroMemory( &pi, sizeof(pi) );
 
 
-    // Start the child process. 
-    if( !CreateProcess( L"bomb.bat",                    // No module name (use command line)
-        NULL,                                           // Command line
-        NULL,                                           // Process handle not inheritable
-        NULL,                                           // Thread handle not inheritable
-        FALSE,                                          // Set handle inheritance to FALSE
-        CREATE_BREAKAWAY_FROM_JOB| CREATE_SUSPENDED,    // No creation flags
-        NULL,                                           // Use parent's environment block
-        NULL,                                           // Use parent's starting directory 
-        &si,                                            // Pointer to STARTUPINFO structure
-        &pi )                                           // Pointer to PROCESS_INFORMATION structure
-    ) 
-    {
-        printf("Failed to create the process. Error: (%d).\n", GetLastError());
+	// Start the child process. 
+	if( !CreateProcess( L"bomb.bat",                    // No module name (use command line)
+		NULL,                                           // Command line
+		NULL,                                           // Process handle not inheritable
+		NULL,                                           // Thread handle not inheritable
+		FALSE,                                          // Set handle inheritance to FALSE
+		CREATE_BREAKAWAY_FROM_JOB| CREATE_SUSPENDED,    // No creation flags
+		NULL,                                           // Use parent's environment block
+		NULL,                                           // Use parent's starting directory 
+		&si,                                            // Pointer to STARTUPINFO structure
+		&pi )                                           // Pointer to PROCESS_INFORMATION structure
+		) 
+	{
+		printf("Failed to create the process. Error: (%d).\n", GetLastError());
 		system("PAUSE");
-        return 1;
-    }
+		return 1;
+	}
 	printf("The process has started successfully.\n");
-	
+
 	if(AssignProcessToJobObject(job, pi.hProcess) == 0)
 	{
 		printf("Failed to assign the process to the job object. Error: (%d).\n", GetLastError());
@@ -109,8 +109,8 @@ int main(int argc, char ** argv){
 	ResumeThread(pi.hThread);
 
 
-    // Wait until child process exits.
-    WaitForSingleObject( pi.hProcess, INFINITE );
+	// Wait until child process exits.
+	WaitForSingleObject( pi.hProcess, INFINITE );
 
 	JOBOBJECT_BASIC_ACCOUNTING_INFORMATION jbai = {0};
 	if(QueryInformationJobObject(job, JobObjectBasicAccountingInformation, &jbai, sizeof(JOBOBJECT_BASIC_ACCOUNTING_INFORMATION), NULL) == 0){
@@ -131,9 +131,9 @@ int main(int argc, char ** argv){
 	printf("Active processes:              %d\n", jbai.ActiveProcesses);
 	printf("Total terminated processes:    %d\n", jbai.TotalTerminatedProcesses);
 
-    // Close process and thread handles. 
-    CloseHandle( pi.hProcess );
-    CloseHandle( pi.hThread );
+	// Close process and thread handles. 
+	CloseHandle( pi.hProcess );
+	CloseHandle( pi.hThread );
 
 	system("PAUSE");
 
