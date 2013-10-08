@@ -3,11 +3,8 @@
 #include <Aclapi.h>
 #include <WinError.h>
 
-/**************************************************
-*                                                 *
-*	JOBOBJECT_BASIC_LIMIT_INFORMATION structure   *
-*                                                 *
-**************************************************/
+// JOBOBJECT_BASIC_LIMIT_INFORMATION structure
+// More info: http://msdn.microsoft.com/en-us/library/windows/desktop/ms684147(v=vs.85).aspx
 
 LARGE_INTEGER PerProcessUserTimeLimitValue = { 1000 };
 LARGE_INTEGER PerJobUserTimeLimitValue     = { 1000 };
@@ -21,11 +18,8 @@ DWORD         SchedulingClassValue         = NULL;
 
 
 
-/*****************************************************
-*                                                    *
-*	JOBOBJECT_EXTENDED_LIMIT_INFORMATION structure   *
-*                                                    *
-*****************************************************/
+// JOBOBJECT_EXTENDED_LIMIT_INFORMATION structure
+// More info: http://msdn.microsoft.com/en-us/library/windows/desktop/ms684156(v=vs.85).aspx
 
 SIZE_T                            ProcessMemoryLimitValue    = 100000000;
 SIZE_T                            JobMemoryLimitValue        = 100000000;
