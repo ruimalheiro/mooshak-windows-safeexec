@@ -8,5 +8,5 @@
 
 int main(int argc, char ** argv)
 {
-	return safe_execute(argc, argv);
+  return safe_execute(argc, argv);
 }
